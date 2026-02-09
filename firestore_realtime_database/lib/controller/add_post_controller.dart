@@ -21,10 +21,10 @@ class AddPostController extends GetxController {
   }
 
   //// ADD POST
-  Future<void> addPost(String id, String title, String description) async {
+  Future<void> addPost(String title, String description) async {
     try {
       isLoading.value = true;
-      await _addPostService.addPost(id, title, description);
+      await _addPostService.addPost(title, description);
       showSuccessDailoge('Add Post Success');
     } on FirebaseException catch (e) {
       errorDailoge(e.toString());
@@ -41,6 +41,29 @@ class AddPostController extends GetxController {
       });
     } on FirebaseException catch (e) {
       errorDailoge(e.toString());
+    }
+  }
+
+  /// UPATE POST
+  Future<void> updatePost(String id, String title, String description) async {
+    try {
+      await _addPostService.updatePost(id, title, description);
+      showSuccessDailoge('Updated Post Success');
+    } on FirebaseException catch (e) {
+      errorDailoge(e.toString());
+    }
+  }
+
+  /// DELETE POST
+  Future<void> deletePost(String id) async {
+    try {
+      isLoading.value = true;
+      await _addPostService.deletePost(id);
+      showSuccessDailoge('Delete Post Success');
+    } on FirebaseException catch (e) {
+      errorDailoge(e.toString());
+    } finally {
+      isLoading.value = false;
     }
   }
 }

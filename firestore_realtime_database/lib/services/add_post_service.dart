@@ -6,15 +6,16 @@ class AddPostService {
   final DatabaseReference _postRef = FirebaseDatabase.instance.ref('posts');
 
   /// Add Post In Firebase Database
-  Future<void> addPost(String id, String title, String description) async {
+  Future<void> addPost(String title, String description) async {
     try {
+      final id = _postRef.push().key!;
       await _postRef.child(id).set({
         'id': id,
         'title': title,
         'description': description,
       });
-    } on FirebaseException catch (e) {
-      throw e;
+    } on FirebaseException {
+      rethrow;
     }
   }
 
@@ -40,5 +41,27 @@ class AddPostService {
 
       return [];
     });
+  }
+
+  /// Update Post in Firebase Database
+  Future<void> updatePost(String id, String title, String description) async {
+    try {
+      await _postRef.child(id).update({
+        'id': id,
+        'title': title,
+        'description': description,
+      });
+    } on FirebaseException {
+      rethrow;
+    }
+  }
+
+  /// Delete Post in Firebase Database
+  Future<void> deletePost(String id) async {
+    try {
+      await _postRef.child(id).remove();
+    } on FirebaseException {
+      rethrow;
+    }
   }
 }

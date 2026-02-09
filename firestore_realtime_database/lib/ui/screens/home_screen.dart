@@ -24,10 +24,74 @@ class HomeScreen extends StatelessWidget {
                 itemCount: controller.posts.length,
                 itemBuilder: (context, index) {
                   final data = controller.posts;
-                  return Card(
-                    child: ListTile(
-                      title: Text(data[index]['title'].toString()),
-                      subtitle: Text(data[index]['description'].toString()),
+                  return GestureDetector(
+                    onTap: () {
+                      Get.to(
+                        AddPost(
+                          id: data[index]['id'],
+                          title: data[index]['title'],
+                          des: data[index]['description'],
+                          isUpdated: true,
+                        ),
+                      );
+                    },
+                    child: Card(
+                      child: ListTile(
+                        title: Text(data[index]['title'].toString()),
+                        subtitle: Text(data[index]['description'].toString()),
+                        trailing: IconButton(
+                          onPressed: () {
+                            Get.dialog(
+                              Dialog(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Padding(
+                                  padding: EdgeInsets.all(20),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Text('Do you want to delete this Post!'),
+                                      SizedBox(height: 10),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          ElevatedButton(
+                                            onPressed: () {
+                                              Get.back();
+                                            },
+                                            child: Text('No'),
+                                          ),
+                                          SizedBox(width: 10),
+                                          Obx(() {
+                                            return ElevatedButton(
+                                              onPressed:
+                                                  controller.isLoading.value
+                                                  ? null
+                                                  : () async {
+                                                      await controller
+                                                          .deletePost(
+                                                            data[index]['id'],
+                                                          );
+                                                    },
+                                              child: controller.isLoading.value
+                                                  ? CircularProgressIndicator()
+                                                  : Text('Yes'),
+                                            );
+                                          }),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                          icon: Icon(Icons.delete, color: Colors.red),
+                        ),
+                      ),
                     ),
                   );
                 },
@@ -35,7 +99,7 @@ class HomeScreen extends StatelessWidget {
       }),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Get.to(AddPost());
+          Get.to(AddPost(isUpdated: false));
         },
         child: Icon(Icons.add),
       ),

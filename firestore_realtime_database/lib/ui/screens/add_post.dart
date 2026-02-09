@@ -4,12 +4,26 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class AddPost extends StatelessWidget {
-  const AddPost({super.key});
+  final String? id;
+  final String? title;
+  final String? des;
+  final bool isUpdated;
+  const AddPost({
+    super.key,
+    this.id,
+    this.title,
+    this.des,
+    required this.isUpdated,
+  });
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController titleController = TextEditingController();
-    TextEditingController desController = TextEditingController();
+    TextEditingController titleController = TextEditingController(
+      text: title ?? '',
+    );
+    TextEditingController desController = TextEditingController(
+      text: des ?? '',
+    );
     final AddPostController controller = Get.find<AddPostController>();
 
     return GestureDetector(
@@ -20,7 +34,7 @@ class AddPost extends StatelessWidget {
         appBar: AppBar(
           backgroundColor: Colors.purple,
           foregroundColor: Colors.white,
-          title: Text('Add Post'),
+          title: Text(isUpdated ? 'Updated Post' : 'Add Post'),
           centerTitle: true,
         ),
         body: Padding(
@@ -63,9 +77,16 @@ class AddPost extends StatelessWidget {
                                 'Please fill in the inputs!',
                               );
                               return;
+                            }
+
+                            if (isUpdated) {
+                              await controller.updatePost(
+                                id!,
+                                titleController.text,
+                                desController.text,
+                              );
                             } else {
                               await controller.addPost(
-                                '9',
                                 titleController.text,
                                 desController.text,
                               );
