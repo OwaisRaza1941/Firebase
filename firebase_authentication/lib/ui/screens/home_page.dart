@@ -1,5 +1,4 @@
-import 'package:firebase_series/ui/screens/add_post.dart';
-import 'package:firebase_series/ui/widgets/drawer.dart';
+import 'package:firebase_series/controller/auth_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -8,23 +7,66 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AuthController controller = Get.find<AuthController>();
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.green,
         foregroundColor: Colors.white,
         title: Text('Home Screen'),
       ),
-      drawer: DrawerClass(),
-      body: Column(children: [
-          
-        ],
-      ),
-
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Get.to(AddPostScreen());
-        },
-        child: Icon(Icons.add),
+      drawer: Drawer(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: double.infinity,
+              height: 250,
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+              decoration: BoxDecoration(color: Colors.green),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  CircleAvatar(
+                    radius: 45,
+                    backgroundImage: AssetImage('assets/men.jpg'),
+                  ),
+                  Text(
+                    'Owais Raza',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white,
+                    ),
+                  ),
+                  Text(
+                    'owaisraza55670@gmail.com',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  IconButton(
+                    onPressed: () async {
+                      await controller.logout();
+                    },
+                    icon: Row(
+                      children: [
+                        Text(
+                          'Logout',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(width: 8),
+                        Icon(Icons.logout, color: Colors.white),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
