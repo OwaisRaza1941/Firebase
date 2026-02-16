@@ -1,4 +1,5 @@
 import 'package:firestore_realtime_database/controller/add_post_controller.dart';
+import 'package:firestore_realtime_database/models/addpost_model.dart';
 import 'package:firestore_realtime_database/ui/dailogs/show_empty_input_dailoge.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -80,16 +81,18 @@ class AddPost extends StatelessWidget {
                             }
 
                             if (isUpdated) {
-                              await controller.updatePost(
-                                id!,
-                                titleController.text,
-                                desController.text,
+                              AddPostModel post = AddPostModel(
+                                id: id,
+                                title: titleController.text,
+                                description: desController.text,
                               );
+                              await controller.updatePost(post);
                             } else {
-                              await controller.addPost(
-                                titleController.text,
-                                desController.text,
+                              AddPostModel post = AddPostModel(
+                                title: titleController.text,
+                                description: desController.text,
                               );
+                              await controller.addPost(post);
                             }
                           },
                     child: controller.isLoading.value

@@ -18,27 +18,31 @@ class HomeScreen extends StatelessWidget {
         centerTitle: true,
       ),
       body: Obx(() {
-        return controller.posts.isEmpty
+        if (controller.isLoading.value) {
+          return Center(child: CircularProgressIndicator());
+        }
+        return controller.post.isEmpty
             ? Center(child: Text('No Post Data'))
             : ListView.builder(
-                itemCount: controller.posts.length,
+                itemCount: controller.post.length,
                 itemBuilder: (context, index) {
-                  final data = controller.posts;
                   return GestureDetector(
                     onTap: () {
                       Get.to(
                         AddPost(
-                          id: data[index]['id'],
-                          title: data[index]['title'],
-                          des: data[index]['description'],
+                          id: controller.post[index].id,
+                          title: controller.post[index].title,
+                          des: controller.post[index].description,
                           isUpdated: true,
                         ),
                       );
                     },
                     child: Card(
                       child: ListTile(
-                        title: Text(data[index]['title'].toString()),
-                        subtitle: Text(data[index]['description'].toString()),
+                        title: Text(controller.post[index].title.toString()),
+                        subtitle: Text(
+                          controller.post[index].description.toString(),
+                        ),
                         trailing: IconButton(
                           onPressed: () {
                             Get.dialog(
@@ -73,7 +77,9 @@ class HomeScreen extends StatelessWidget {
                                                   : () async {
                                                       await controller
                                                           .deletePost(
-                                                            data[index]['id'],
+                                                            controller
+                                                                .post[index]
+                                                                .id!,
                                                           );
                                                     },
                                               child: controller.isLoading.value

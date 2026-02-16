@@ -1,19 +1,15 @@
 class AddPostModel {
-  String id;
+  String? id;
   String title;
   String description;
 
-  AddPostModel({
-    required this.id,
-    required this.title,
-    required this.description,
-  });
+  AddPostModel({this.id, required this.title, required this.description});
 
   //// Convert To JSON In DartModel
 
-  factory AddPostModel.fromMap(Map<String, dynamic> map) {
+  factory AddPostModel.fromMap(Map<String, dynamic> map, String id) {
     return AddPostModel(
-      id: map['id'],
+      id: id,
       title: map['title'],
       description: map['description'],
     );

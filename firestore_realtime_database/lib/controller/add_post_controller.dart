@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firestore_realtime_database/models/addpost_model.dart';
 import 'package:firestore_realtime_database/services/add_post_service.dart';
 import 'package:firestore_realtime_database/ui/dailogs/error_dailoge.dart';
 import 'package:firestore_realtime_database/ui/dailogs/show_success_dailoge.dart';
@@ -9,7 +10,7 @@ class AddPostController extends GetxController {
   final AddPostService _addPostService = AddPostService();
 
   ///ObserVailbe List Of Post Data
-  var posts = [].obs;
+  RxList<AddPostModel> post = <AddPostModel>[].obs;
 
   ///Loading Oservaible Variable
   RxBool isLoading = false.obs;
@@ -21,10 +22,10 @@ class AddPostController extends GetxController {
   }
 
   //// ADD POST
-  Future<void> addPost(String title, String description) async {
+  Future<void> addPost(AddPostModel post) async {
     try {
       isLoading.value = true;
-      await _addPostService.addPost(title, description);
+      await _addPostService.addPost(post);
       showSuccessDailoge('Add Post Success');
     } on FirebaseException catch (e) {
       errorDailoge(e.toString());
@@ -36,18 +37,21 @@ class AddPostController extends GetxController {
   //// Get POST
   void getPost() {
     try {
+      isLoading.value = true;
       _addPostService.getPosts().listen((list) {
-        posts.value = list;
+        post.value = list;
       });
     } on FirebaseException catch (e) {
       errorDailoge(e.toString());
+    } finally {
+      isLoading.value = false;
     }
   }
 
   /// UPATE POST
-  Future<void> updatePost(String id, String title, String description) async {
+  Future<void> updatePost(AddPostModel post) async {
     try {
-      await _addPostService.updatePost(id, title, description);
+      await _addPostService.updatePost(post);
       showSuccessDailoge('Updated Post Success');
     } on FirebaseException catch (e) {
       errorDailoge(e.toString());
