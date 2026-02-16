@@ -1,4 +1,5 @@
 import 'package:cloud_firestore_database/controller/user_controller.dart';
+import 'package:cloud_firestore_database/models/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -79,16 +80,18 @@ class AddFirestoreScreen extends StatelessWidget {
                             }
 
                             if (isUpdated) {
-                              await controller.updatedUsers(
-                                id!,
-                                titleController.text,
-                                desController.text,
+                              UserModel user = UserModel(
+                                id: id,
+                                title: titleController.text,
+                                description: desController.text,
                               );
+                              await controller.updatedUsers(user);
                             } else {
-                              await controller.addUsers(
-                                titleController.text,
-                                desController.text,
+                              UserModel user = UserModel(
+                                title: titleController.text,
+                                description: desController.text,
                               );
+                              await controller.addUsers(user);
                             }
                           },
                     child: controller.isLoading.value

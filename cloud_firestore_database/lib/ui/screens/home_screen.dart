@@ -1,4 +1,5 @@
 import 'package:cloud_firestore_database/controller/user_controller.dart';
+import 'package:cloud_firestore_database/ui/dailogs/delete_user_dailog.dart';
 import 'package:cloud_firestore_database/ui/screens/add_firestore_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -27,25 +28,25 @@ class HomeScreen extends StatelessWidget {
             : ListView.builder(
                 itemCount: controller.users.length,
                 itemBuilder: (context, index) {
-                  final data = controller.users[index];
+                  // final data = controller.users[index];
                   return GestureDetector(
                     onTap: () {
                       Get.to(
                         AddFirestoreScreen(
                           isUpdated: true,
-                          id: data['id'],
-                          title: data['title'],
-                          description: data['description'],
+                          id: controller.users[index].id,
+                          title: controller.users[index].title,
+                          description: controller.users[index].description,
                         ),
                       );
                     },
                     child: Card(
                       child: ListTile(
-                        title: Text(data['title']),
-                        subtitle: Text(data['description']),
+                        title: Text(controller.users[index].title),
+                        subtitle: Text(controller.users[index].description),
                         trailing: IconButton(
                           onPressed: () {
-                            Get.dialog(Dialog());
+                            deleteUser(controller.users[index].id ?? '');
                           },
                           icon: Icon(Icons.delete, color: Colors.red),
                         ),

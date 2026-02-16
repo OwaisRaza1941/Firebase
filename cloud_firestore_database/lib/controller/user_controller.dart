@@ -1,3 +1,4 @@
+import 'package:cloud_firestore_database/models/user_model.dart';
 import 'package:cloud_firestore_database/services/user_services.dart';
 import 'package:cloud_firestore_database/ui/dailogs/show_error_dialog.dart';
 import 'package:cloud_firestore_database/ui/dailogs/show_success_dailog.dart';
@@ -12,7 +13,7 @@ class UserController extends GetxController {
   RxBool isLoading = false.obs;
 
   ///RX List
-  var users = [].obs;
+  RxList<UserModel> users = <UserModel>[].obs;
 
   @override
   void onInit() {
@@ -20,12 +21,12 @@ class UserController extends GetxController {
     getUser();
   }
 
-  //// Add Users FireStore
-  Future<void> addUsers(String title, String description) async {
+  //// Add Users Firestore
+  Future<void> addUsers(UserModel user) async {
     try {
       isLoading.value = true;
-      await _addUsers.usersAdd(title, description);
-      showSuccessDailoge('Users Add Successfully');
+      await _addUsers.usersAdd(user);
+      showSuccessDailoge('Users Add Successfully!');
     } on FirebaseException catch (e) {
       errorDailoge(e.toString());
     } finally {
@@ -33,7 +34,7 @@ class UserController extends GetxController {
     }
   }
 
-  /// Get Users Firesstore
+  /// Get Users Firestore
   void getUser() {
     try {
       isLoading.value = true;
@@ -47,12 +48,25 @@ class UserController extends GetxController {
     }
   }
 
-  //// Updted Users FireStore
-  Future<void> updatedUsers(String id, String title, String description) async {
+  //// Updated Users Firestore
+  Future<void> updatedUsers(UserModel user) async {
     try {
       isLoading.value = true;
-      await _addUsers.usersUpdated(id, title, description);
-      showSuccessDailoge('Users Add Updated');
+      await _addUsers.usersUpdated(user);
+      showSuccessDailoge('Users Updated Successfully!');
+    } on FirebaseException catch (e) {
+      errorDailoge(e.toString());
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  //// Delete Users Firestore
+  Future<void> deleteUsers(String id) async {
+    try {
+      isLoading.value = true;
+      await _addUsers.deleteUsers(id);
+      showSuccessDailoge('Users Delete Successfully!');
     } on FirebaseException catch (e) {
       errorDailoge(e.toString());
     } finally {
